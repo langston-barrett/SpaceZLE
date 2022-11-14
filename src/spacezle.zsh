@@ -8,7 +8,7 @@ zlefzf() {
   if [[ "${nbuf}" -lt $((COLUMNS-32)) ]]; then
     start_col="${nbuf}"
   fi
-
+  
   fzf --margin=0,0,0,"${start_col}" \
       --height=10% \
       --min-height=8 \
@@ -50,10 +50,10 @@ zle_insert() {
 # keymap. ESC exits it.
 bindkey -N spacezle vicmd
 bindkey -M spacezle '^[' vi-cmd-mode
-spacezle-map() {
+spacezle-map() { 
   bindkey -N spacezle spacezle-bak
   zle -K spacezle
-  show-bindings
+  zle -M "$(spacezle-print-prefixes)"
 }
 zle -N spacezle-map
 bindkey -M vicmd ' ' spacezle-map
@@ -75,11 +75,19 @@ zle_bind() {
 
 spacezle-print-bindings() {
   for bind in "${SPACEZLE_BINDINGS[@]}"; do
-    IFS=';' read -A words <<< "${bind}"
+    IFS=';' read -rA words <<< "${bind}"
     binding="${words[1]}"
     if [[ -z "${1}" ]] || [[ "${binding#${1}}" != "${binding}" ]]; then
       printf '%s: %s\n' "${words[1]#${1}}" "${words[2]}"
     fi
+  done
+}
+
+spacezle-show-bindings() {
+  zle -M "$(spacezle-print-bindings "${1}")"
+  for bind in "${SPACEZLE_BINDINGS[@]}"; do
+    IFS=';' read -rA words <<< "${bind}"
+    bindkey -M spacezle "${words[1]#${1}}" "${words[2]}"
   done
 }
 
@@ -92,7 +100,7 @@ zle_prefix() {
 
 spacezle-print-prefixes() {
   for bind in "${SPACEZLE_PREFIXES[@]}"; do
-    IFS=';' read -A words <<< "${bind}"
+    IFS=';' read -rA words <<< "${bind}"
     prefix="${words[1]}"
     if [[ -z "${1}" ]] || [[ "${prefix#${1}}" != "${prefix}" ]]; then
       printf '%s: %s\n' "${words[1]#${1}}" "${words[3]}"
@@ -100,7 +108,7 @@ spacezle-print-prefixes() {
   done
 }
 
-# https://stackoverflow.com/questions/9901210
+# https://stackoverflow.com/questions/9901210 
 path_of_this_file="${(%):-%x}"
 for f in "$(dirname "${path_of_this_file}")"/keys/*.zsh; do
   source "${f}"
@@ -119,27 +127,20 @@ dir-pwd() {
 zle_bind dir-pwd 'dw' "pwd" "Insert current working directory"
 
 dir-show-bindings() {
-  zle -M "$(spacezle-print-bindings d)"
-  bindkey -M spacezle 'd' dir-cd
-  bindkey -M spacezle 'w' dir-pwd
+  spacezle-show-bindings 'd'
 }
 zle_prefix dir-show-bindings 'd' "dir"
 
 # g ----------------------------------------------------------------------------
 
 zle_bind forgit::add 'ga' "git-add" "Launch forgit::add"
-zle_bind forgit::add 'gb' "git-blame" "Launch forgit::blame"
+zle_bind forgit::blame 'gb' "git-blame" "Launch forgit::blame"
 zle_bind forgit::checkout::branch 'gc' "git-checkout-branch" "Launch forgit::checkout::branch"
 zle_bind forgit::branch::delete 'gD' "git-branch-delete" "Launch forgit::branch::delete"
 zle_bind forgit::log 'gl' "git-log" "Launch forgit::log"
 
 git-show-bindings() {
-  zle -M "$(spacezle-print-bindings g)"
-  bindkey -M spacezle 'a' forgit::add
-  bindkey -M spacezle 'b' forgit::blame
-  bindkey -M spacezle 'c' forgit::checkout::branch
-  bindkey -M spacezle 'D' forgit::branch::delete
-  bindkey -M spacezle 'l' forgit::log
+  spacezle-show-bindings 'g'
 }
 zle_prefix git-show-bindings 'g' "git"
 
@@ -158,9 +159,7 @@ quit-reload() {
 zle_bind quit-reload 'qr' "reload" "Reload ZSH (exec zsh)"
 
 quit-show-bindings() {
-  zle -M "$(spacezle-print-bindings q)"
-  bindkey -M spacezle 'q' quit-quit
-  bindkey -M spacezle 'r' quit-reload
+  spacezle-show-bindings 'q'
 }
 zle_prefix quit-show-bindings 'q' "quit"
 
@@ -197,12 +196,7 @@ insert-fzf-project() {
 zle_bind insert-fzf-project 'ip' "insert-project" "Insert file or directory from project root with FZF"
 
 insert-show-bindings() {
-  zle -M "$(spacezle-print-bindings i)"
-  bindkey -M spacezle 'c' insert-clipboard
-  bindkey -M spacezle 'd' insert-fzf-directory
-  bindkey -M spacezle 'f' insert-fzf-file
-  bindkey -M spacezle 'h' insert-fzf-history
-  bindkey -M spacezle 'p' insert-fzf-project
+  spacezle-show-bindings 'i'
 }
 zle_prefix insert-show-bindings 'i' "insert"
 
@@ -227,8 +221,7 @@ sys-suspend() {
 zle_bind sys-suspend 'SS' "sys-suspend" "Suspend the computer"
 
 sys-show-bindings() {
-  zle -M "$(spacezle-print-bindings s)"
-  bindkey -M spacezle 'S' sys-suspend
+  spacezle-show-bindings 'S'
 }
 zle_prefix sys-show-bindings 'S' "sys"
 
@@ -253,10 +246,7 @@ yank-rerun() {
 zle_bind yank-rerun 'yr' "yank-rerun" "Re-run last command and yank output to clipboard"
 
 yank-show-bindings() {
-  zle -M "$(spacezle-print-bindings y)"
-  bindkey -M spacezle 'c' yank-cwd
-  bindkey -M spacezle 'l' yank-last
-  bindkey -M spacezle 'r' yank-rerun
+  spacezle-show-bindings 'y'
 }
 zle_prefix yank-show-bindings 'y' "yank"
 
@@ -274,18 +264,13 @@ spacezle-print-commands() {
 spacezle-command-palette() {
   cmd=$(spacezle-print-commands | zlefzf --delimiter=' ' --nth=1 --with-nth=1 --preview="echo 'Binding: <SPACE>{3}\n\n{4}'")
   if [[ -n "${cmd}" ]]; then
-    IFS=' ' read -A words <<< "${cmd}"
+    IFS=' ' read -rA words <<< "${cmd}"
     zle "${words[2]}"
   fi
 }
 
 zle -N spacezle-command-palette
 zle_bind spacezle-command-palette ' ' "command-palette" "Open command palette"
-
-show-bindings() {
-  zle -M "$(spacezle-print-prefixes)"
-}
-# zle_bind show-bindings ''
 
 # Backup default keybindings, as they get modified when help is shown
 bindkey -N spacezle-bak spacezle

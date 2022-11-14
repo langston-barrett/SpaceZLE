@@ -52,7 +52,7 @@ zle_bind project-editor 'pe' "project-edit" "Open EDITOR in project root"
 
 project-file() {
   cd "${PROJECT_ROOT}" || return
-  "${EDITOR}" "$(fd --type f . | zlefzf)"
+  ee "$(fd --type f . | zlefzf)"
 }
 zle_bind project-file 'pf' "project-file" "Open file in project in EDITOR with FZF"
 
@@ -62,11 +62,7 @@ project-make() {
 zle_bind project-make 'pM' "project-make" "Run Make in the project root"
 
 project-show-bindings() {
-  zle -M "$(spacezle-print-bindings p)"
-  bindkey -M spacezle 'c' project-cd
-  bindkey -M spacezle 'e' project-editor
-  bindkey -M spacezle 'f' project-file
-  bindkey -M spacezle 'M' project-make
+  spacezle-show-bindings 'p'
 }
 zle_prefix project-show-bindings 'p' "project"
 
