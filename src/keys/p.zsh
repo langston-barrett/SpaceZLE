@@ -39,30 +39,30 @@ set_project_root
 project-cd() {
   local dir
   dir="$(realpath --relative-to="${PWD}" ${PROJECT_ROOT})"
-  cd "$(fd . --type d "${dir}" | zlefzff)" || true
+  cd "$(fd . --type d "${dir}" | spacezle-fzff)" || true
   zle redisplay
 }
-zle_bind project-cd 'pc' "project-cd" "Change to directory in project with FZF"
+spacezle-bind project-cd 'pc' "project-cd" "Change to directory in project with FZF"
 
 project-editor() {
   cd "${PROJECT_ROOT}" || return
   "${EDITOR}"
 }
-zle_bind project-editor 'pe' "project-edit" "Open EDITOR in project root"
+spacezle-bind project-editor 'pe' "project-edit" "Open EDITOR in project root"
 
 project-file() {
   cd "${PROJECT_ROOT}" || return
-  ee "$(fd --type f . | zlefzf)"
+  ee "$(fd --type f . | spacezle-fzf)"
 }
-zle_bind project-file 'pf' "project-file" "Open file in project in EDITOR with FZF"
+spacezle-bind project-file 'pf' "project-file" "Open file in project in EDITOR with FZF"
 
 project-make() {
-  zle_append_to_buffer "make -C ${PROJECT_ROOT} "
+  spacezle-append-to-buffer "make -C ${PROJECT_ROOT} "
 }
-zle_bind project-make 'pM' "project-make" "Run Make in the project root"
+spacezle-bind project-make 'pM' "project-make" "Run Make in the project root"
 
 project-show-bindings() {
   spacezle-show-bindings 'p'
 }
-zle_prefix project-show-bindings 'p' "project"
+spacezle-prefix project-show-bindings 'p' "project"
 

@@ -17,7 +17,18 @@ of each prefix below the prompt, `SPC i` shows the names and bindings for
 SpaceZLE is written in pure ZSH, and there's virtually no performance penalty
 for using it.
 
-## Install
+## Installation
+
+### Manual
+
+Clone the repo somewhere:
+```sh
+git clone https://github.com/langston-barrett/SpaceZLE ~/somewhere
+```
+Then add this line to your `~/.zshrc`:
+```sh
+source ~/somewhere/src/spacezle.zsh
+```
 
 ## Optional Dependencies
 
@@ -27,6 +38,7 @@ are significantly improved if they're available:
 - [fd][fd]
 - [FZF][fzf]
 - [forgit][forgit]
+- tmux
 - xsel
 
 A few keybindings won't work properly without these tools, but the goal is
