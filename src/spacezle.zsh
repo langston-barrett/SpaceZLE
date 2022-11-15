@@ -242,11 +242,23 @@ spacezle-bind zle-clear 'l' "clear" "Clear the screen"
 
 # S ----------------------------------------------------------------------------
 
+sys-halt() {
+  spacezle-append-to-buffer "shutdown now"
+  vi-accept-line
+}
+spacezle-bind sys-halt 'SH' "sys-halt" "Halt the computer"
+
 sys-suspend() {
   spacezle-append-to-buffer "systemctl suspend"
   vi-accept-line
 }
 spacezle-bind sys-suspend 'SS' "sys-suspend" "Suspend the computer"
+
+sys-reboot() {
+  spacezle-append-to-buffer "reboot"
+  vi-accept-line
+}
+spacezle-bind sys-reboot 'SR' "sys-reboot" "Reboot the computer"
 
 sys-show-bindings() {
   spacezle-show-bindings 'S'
@@ -281,7 +293,7 @@ window-hsplit() {
   tmux split-window -v
 
 }
-spacezle-bind window-hsplit 'w-' "window-hsplit" "tmux: Split window horizontally"
+# spacezle-bind window-hsplit 'w-' "window-hsplit" "tmux: Split window horizontally"
 spacezle-bind window-hsplit 'wH' "window-hsplit" "tmux: Split window horizontally"
 
 window-vsplit() {
@@ -314,7 +326,7 @@ spacezle-bind window-new 'ww' "window-new" "tmux: New window"
 window-prev() {
   tmux prev-window
 }
-spacezle-bind window-next 'wn' "window-next" "tmux: Next window"
+spacezle-bind window-prev 'wn' "window-prev" "tmux: Previous window"
 
 window-show-bindings() {
   spacezle-show-bindings 'w'
