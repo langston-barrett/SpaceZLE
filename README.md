@@ -19,6 +19,7 @@ for using it.
 
 ## Keybindings
 
+- `SPC SPC`: Command palette
 - `SPC d`: dir
   - `SPC d d`: Change working directory
   - `SPC d w`: Insert current working directory
