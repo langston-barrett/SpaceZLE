@@ -304,6 +304,12 @@ yank-cwd() {
 }
 spacezle-bind yank-cwd 'yc' "yank-cwd" "Copy current working directory to clipboard"
 
+yank-history() {
+  print -rC1 -- "$history[@]" | spacezle-fzf | xsel -ib
+  zle -R "" "copied '$(xsel -ob | head -n 1)'"
+}
+spacezle-bind yank-history 'yh' "yank-history" "Copy command from shell history"
+
 yank-last() {
   printf "%s" "$history[$((HISTCMD-1))]" | xsel -ib
   zle -R "" "copied '$(xsel -ob | head -n 1)'"

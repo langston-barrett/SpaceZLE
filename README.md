@@ -65,6 +65,7 @@ for using it.
   - `SPC w n`: tmux: Previous window
 - `SPC y`: yank
   - `SPC y c`: Copy current working directory to clipboard
+  - `SPC y h`: Copy command from shell history to clipboard
   - `SPC y l`: Copy last command to clipboard
   - `SPC y r`: Re-run last command and yank output to clipboard
 - `SPC x`: tmux
