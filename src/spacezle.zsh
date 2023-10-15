@@ -201,7 +201,15 @@ spacezle-bind zle-clear 'l' "clear" "Clear the screen"
 
 # s ----------------------------------------------------------------------------
 
-# ssh
+zle-search() {
+  zle history-incremental-search-backward
+}
+spacezle-bind zle-search 'sh' "search-history" "Search history"
+
+search-show-bindings() {
+  spacezle-show-bindings 's'
+}
+spacezle-prefix search-show-bindings 's' "search"
 
 # S ----------------------------------------------------------------------------
 
