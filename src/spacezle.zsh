@@ -325,7 +325,7 @@ yank-last() {
 spacezle-bind yank-last 'yl' "yank-last" "Copy last command to clipboard"
 
 yank-rerun() {
-  spacezle-append-to-buffer "$history[$((HISTCMD-1))] 2>&1 |& xsel -ib"
+  spacezle-append-to-buffer "$history[$((HISTCMD-1))] 2>&1 | xsel -ib"
 }
 spacezle-bind yank-rerun 'yr' "yank-rerun" "Re-run last command and yank output to clipboard"
 
