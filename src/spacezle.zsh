@@ -159,6 +159,18 @@ dir-show-bindings() {
 }
 spacezle-prefix dir-show-bindings 'd' "dir"
 
+# e ----------------------------------------------------------------------------
+
+edit-fzf-file() {
+  spacezle-insert "hx $(fd --type f . | spacezle-fzff)"
+}
+spacezle-bind insert-fzf-file 'ef' "edit-file" "Edit file"
+
+edit-show-bindings() {
+  spacezle-show-bindings 'e'
+}
+spacezle-prefix edit-show-bindings 'e' "edit"
+
 # g ----------------------------------------------------------------------------
 
 spacezle-bind forgit::add 'ga' "git-add" "Launch forgit::add"

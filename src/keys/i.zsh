@@ -16,7 +16,7 @@ list-history() {
 # Commands
 
 insert-clipboard() {
-  spacezle-append-to-buffer "$(xsel -ob)"
+  spacezle-insert "$(xsel -ob)"
 }
 spacezle-bind insert-clipboard 'ic' "insert-clipboard" "Insert content of system clipboard"
 
@@ -44,6 +44,11 @@ insert-fzf-project() {
   spacezle-append-to-buffer "$(fd "${PROJECT_ROOT}" | spacezle-fzf)"
 }
 spacezle-bind insert-fzf-project 'ip' "insert-project" "Insert file or directory from project root with FZF"
+
+insert-pwd() {
+  spacezle-insert "$(pwd)"
+}
+spacezle-bind insert-pwd 'iw' "insert-working-directory" "Insert current working directory"
 
 insert-show-bindings() {
   spacezle-show-bindings 'i'
