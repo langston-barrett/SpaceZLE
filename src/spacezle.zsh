@@ -318,26 +318,38 @@ spacezle-prefix window-show-bindings 'w' "window"
 
 # y ----------------------------------------------------------------------------
 
+if [[ ${OSTYPE} == darwin* ]]; then
+  spacezle-copy() { pbcopy; }
+else
+  spacezle-copy() { xsel -ib; }
+fi
+
+if [[ ${OSTYPE} == darwin* ]]; then
+  spacezle-paste() { pbpaste; }
+else
+  spacezle-paste() { xsel -ob; }
+fi
+
 yank-cwd() {
-  pwd | xsel -ib
+  pwd | spacezle-copy
   zle -R "" "copied '$(pwd)'"
 }
 spacezle-bind yank-cwd 'yc' "yank-cwd" "Copy current working directory to clipboard"
 
 yank-history() {
-  print -rC1 -- "$history[@]" | spacezle-fzf | xsel -ib
-  zle -R "" "copied '$(xsel -ob | head -n 1)'"
+  print -rC1 -- "$history[@]" | spacezle-fzf | spacezle-copy
+  zle -R "" "copied '$(spacezle-paste | head -n 1)'"
 }
 spacezle-bind yank-history 'yh' "yank-history" "Copy command from shell history"
 
 yank-last() {
-  printf "%s" "$history[$((HISTCMD-1))]" | xsel -ib
-  zle -R "" "copied '$(xsel -ob | head -n 1)'"
+  printf "%s" "$history[$((HISTCMD-1))]" | spacezle-copy
+  zle -R "" "copied '$(spacezle-paste | head -n 1)'"
 }
 spacezle-bind yank-last 'yl' "yank-last" "Copy last command to clipboard"
 
 yank-rerun() {
-  spacezle-append-to-buffer "$history[$((HISTCMD-1))] 2>&1 | xsel -ib"
+  spacezle-append-to-buffer "$history[$((HISTCMD-1))] 2>&1 | spacezle-copy"
 }
 spacezle-bind yank-rerun 'yr' "yank-rerun" "Re-run last command and yank output to clipboard"
 
